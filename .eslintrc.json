@@ -1,0 +1,69 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "jest/globals": true
+  },
+  "extends": [
+    "plugin:react/recommended",
+    "airbnb"
+  ],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "plugins": [
+    "prettier",
+    "testing-library",
+    "jest"
+  ],
+  "rules": {
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [
+          ".js",
+          ".jsx"
+        ]
+      }
+    ],
+    "react/jsx-wrap-multilines": "off",
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-one-expression-per-line": "off",
+    "import/no-unresolved": "off",
+    "operator-linebreak": "off",
+    "arrow-body-style": 0,
+    "prettier/prettier": ["error", { "singleQuote": true }],
+    "jsx-quotes": ["error", "prefer-single"],
+    "react/function-component-definition": [
+      2,
+      {
+        "namedComponents": "arrow-function"
+      }
+    ],
+    "object-curly-newline": [
+      "error",
+      {
+        "ObjectExpression": {
+          "consistent": true,
+          "multiline": true
+        },
+        "ObjectPattern": {
+          "consistent": true,
+          "multiline": true
+        },
+        "ImportDeclaration": {
+          "consistent": true,
+          "multiline": true
+        },
+        "ExportDeclaration": {
+          "multiline": true,
+          "consistent": true
+        }
+      }
+    ]
+  }
+}
