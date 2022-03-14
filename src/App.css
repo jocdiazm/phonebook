@@ -1,7 +1,13 @@
 .App {
-  margin: 0;
+  margin: auto;
   width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.Phonebook-container {
   display: flex;
   flex-flow: column nowrap;
-  align-items: center;
 }
