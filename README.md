@@ -13,7 +13,8 @@ React web app with:
 
 [try the demo @netlify](https://phonebook-jcdiaz.netlify.app/)
 
-![image](https://user-images.githubusercontent.com/13368066/158481302-80e46982-a5d2-494a-9f9e-147c4e390fc7.png)
+
+![01-Phonebook](https://user-images.githubusercontent.com/13368066/158482448-888f534f-b927-4b0c-93e0-21f5fdc1f2b2.gif)
 
 
 ## How to run
