@@ -1,40 +1,34 @@
 /* eslint-disable react/prop-types */
-import { ActionIcon, Button, Table, Text } from '@mantine/core';
+import { ActionIcon, Button, Modal, Table, Text } from '@mantine/core';
+import { useState } from 'react';
 import uniqid from 'uniqid';
 import {
   StarFillIcon,
   StarIcon,
   XCircleFillIcon,
 } from '@primer/octicons-react';
+import {
+  editContactLocalStorage,
+  removeContactLocalStorage,
+} from '../../Context/actions';
+import { useAppDispatch, useAppState } from '../../Context/store';
+import NewContactForm from '../NewContactForm';
 
 const ContactsTable = (props) => {
-  const { contacts, setcontacts: setContacts, favorite } = props;
-  const handleDeleteItem = (index) => {
-    setContacts((state) => {
-      const newState = [...state];
-      newState.splice(index, 1);
-      return newState;
-    });
-  };
-  const handleEditContact = (index) => {
-    setContacts((state) => {
-      const newState = [...state];
-      newState.splice(index, 1);
-      return newState;
-    });
-  };
-  const handleStarContact = (index) => {
-    setContacts((state) => {
-      const newState = state.map((contact, contactIndex) => {
-        if (contactIndex === index) {
-          const updatedContact = { ...contact, favorite: !contact.favorite };
-          return updatedContact;
-        }
-        return contact;
-      });
+  const { contacts } = useAppState();
+  const dispatch = useAppDispatch();
 
-      return newState;
-    });
+  const { favorite, seteditcontact, seteditcontactopen } = props;
+  const handleDeleteItem = (contact) => {
+    removeContactLocalStorage(dispatch, contact);
+  };
+  const handleEditContact = (contact) => {
+    seteditcontact(contact);
+    seteditcontactopen(true);
+  };
+  const handleStarContact = (contact) => {
+    const toggleStarContact = { ...contact, favorite: !contact.favorite };
+    editContactLocalStorage(dispatch, toggleStarContact);
   };
   const rows = contacts
     .filter((contact) => (favorite ? contact.favorite : contact))
@@ -45,7 +39,7 @@ const ContactsTable = (props) => {
             color={contact.favorite ? 'yellow' : 'gray'}
             variant='transparent'
             title='Add to favorites'
-            onClick={() => handleStarContact(index)}
+            onClick={() => handleStarContact(contact)}
           >
             {contact.favorite ? (
               <StarFillIcon size={18} />
@@ -59,7 +53,11 @@ const ContactsTable = (props) => {
         <td>{contact?.phone}</td>
         <td>{contact?.email}</td>
         <td>
-          <Button color='blue' compact onClick={handleEditContact}>
+          <Button
+            color='blue'
+            compact
+            onClick={() => handleEditContact(contact)}
+          >
             Edit
           </Button>
         </td>
@@ -68,7 +66,7 @@ const ContactsTable = (props) => {
             color='red'
             variant='transparent'
             title='Remove item'
-            onClick={() => handleDeleteItem(index)}
+            onClick={() => handleDeleteItem(contact)}
           >
             <XCircleFillIcon />
           </ActionIcon>
@@ -96,19 +94,41 @@ const ContactsTable = (props) => {
 };
 
 const PhonebookTable = (props) => {
-  const { seteditcontact, contacts, setContacts, favorite } = props;
+  const { favorite } = props;
+  const [editContactOpened, setEditContactOpened] = useState(false);
+  const [editContact, setEditContact] = useState('hola');
 
-  const checkContacts = contacts.filter((contact) => {
-    return favorite ? contact.favorite : contact;
+  const { contacts } = useAppState();
+
+  const checkContacts = contacts?.filter((contact) => {
+    return favorite ? contact?.favorite : contact;
   });
 
   return checkContacts?.length ? (
-    <ContactsTable
-      contacts={contacts}
-      setcontacts={setContacts}
-      seteditcontact={seteditcontact}
-      favorite={favorite}
-    />
+    <>
+      <ContactsTable
+        seteditcontactopen={setEditContactOpened}
+        seteditcontact={setEditContact}
+        favorite={favorite}
+      />
+      <Modal
+        opened={editContactOpened}
+        onClose={() => setEditContactOpened(false)}
+        title='Edit Contact'
+        styles={{
+          header: { fontWeight: 600 },
+        }}
+        transition='fade'
+        transitionDuration={300}
+        transitionTimingFunction='ease'
+        centered
+      >
+        <NewContactForm
+          setmodalopen={setEditContactOpened}
+          editcontact={editContact}
+        />
+      </Modal>
+    </>
   ) : (
     <Text>There are no contacts to show</Text>
   );

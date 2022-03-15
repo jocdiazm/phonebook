@@ -1,47 +1,50 @@
+/* eslint-disable no-unused-vars */
 import { Button, Modal, Tabs, Title } from '@mantine/core';
 import {
   PersonAddIcon,
   PersonFillIcon,
   StarFillIcon,
 } from '@primer/octicons-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import NewContactForm from './Components/NewContactForm';
 import PhonebookTable from './Components/PhonebookTable';
+import { getContactsFromLocalStorage } from './Context/actions';
+import { useAppDispatch, useAppState } from './Context/store';
 
 const myContacts = [
   {
     name: 'Jose Díaz',
-    phone: '3001231234',
+    phone: '3001231235',
     email: 'josek1031@gmail.com',
     favorite: false,
   },
   {
     name: 'Jose Carlos Díaz',
-    phone: '12345345354',
+    phone: '12345345358',
     email: 'josekdiaz@gmail.com',
     favorite: true,
   },
   {
     name: 'Jose Díaz 3',
-    phone: '30012234324234',
+    phone: '30012234324239',
     email: 'josek1031+01@gmail.com',
     favorite: false,
   },
   {
-    name: 'Jose Díaz',
+    name: 'Jose Díaz 4',
     phone: '3001231234',
     email: 'josek1031@gmail.com',
     favorite: false,
   },
   {
-    name: 'Jose Carlos Díaz',
+    name: 'Jose Carlos Díaz 6',
     phone: '12345345354',
     email: 'josekdiaz@gmail.com',
     favorite: true,
   },
   {
-    name: 'Jose Díaz 3',
+    name: 'Jose Díaz 7',
     phone: '30012234324234',
     email: 'josek1031+01@gmail.com',
     favorite: false,
@@ -50,8 +53,14 @@ const myContacts = [
 
 const App = () => {
   const [newContactOpened, setNewContactOpened] = useState(false);
-  const [editContactOpened, setEditContactOpened] = useState(false);
-  const [contacts, setContacts] = useState(myContacts);
+  const { contacts } = useAppState();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    localStorage.setItem('contacts', JSON.stringify(myContacts));
+    getContactsFromLocalStorage(dispatch);
+  }, []);
+
   return (
     <div className='App'>
       <div className='Phonebook-container'>
@@ -90,36 +99,12 @@ const App = () => {
           <NewContactForm setmodalopen={setNewContactOpened} />
         </Modal>
 
-        <Modal
-          opened={editContactOpened}
-          onClose={() => setEditContactOpened(false)}
-          title='Edit Contact'
-          styles={{
-            header: { fontWeight: 600 },
-          }}
-          transition='fade'
-          transitionDuration={300}
-          transitionTimingFunction='ease'
-          centered
-        >
-          <NewContactForm setmodalopen={setEditContactOpened} />
-        </Modal>
-
         <Tabs>
           <Tabs.Tab label='Contacts' icon={<PersonFillIcon size={14} />}>
-            <PhonebookTable
-              contacts={contacts}
-              setContacts={setContacts}
-              seteditcontact={setEditContactOpened}
-            />
+            <PhonebookTable contacts={contacts} />
           </Tabs.Tab>
           <Tabs.Tab label='Favorites' icon={<StarFillIcon size={14} />}>
-            <PhonebookTable
-              contacts={contacts}
-              setContacts={setContacts}
-              seteditcontact={setEditContactOpened}
-              favorite
-            />
+            <PhonebookTable contacts={contacts} favorite />
           </Tabs.Tab>
         </Tabs>
       </div>
