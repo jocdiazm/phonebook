@@ -3,15 +3,22 @@
 /* eslint-disable no-unused-vars */
 import {
   Anchor,
+  Button,
   Checkbox,
+  CheckboxIcon,
   Group,
   Paper,
   PasswordInput,
+  Text,
   TextInput,
   ThemeIcon,
 } from '@mantine/core';
 import { useForm, useToggle } from '@mantine/hooks';
-import { AlertFillIcon, CheckIcon } from '@primer/octicons-react';
+import {
+  AlertFillIcon,
+  CheckIcon,
+  DeviceMobileIcon,
+} from '@primer/octicons-react';
 import { useEffect, useState } from 'react';
 
 const NewContactForm = (props) => {
@@ -50,7 +57,7 @@ const NewContactForm = (props) => {
             <TextInput
               required
               label='Name'
-              placeholder='Your fullname'
+              placeholder='New contact fullname'
               value={form.values.name}
               onChange={(event) => {
                 form.setFieldValue('name', event.currentTarget.value);
@@ -60,7 +67,7 @@ const NewContactForm = (props) => {
             <TextInput
               required
               label='Email'
-              placeholder='myemail@example.com'
+              placeholder='contact@example.com'
               value={form.values.email}
               onChange={(event) => {
                 form.setFieldValue('email', event.currentTarget.value);
@@ -70,23 +77,15 @@ const NewContactForm = (props) => {
             <TextInput
               required
               label='Phone'
-              placeholder='3002342345'
-              value={form.values.email}
+              icon={<DeviceMobileIcon />}
+              placeholder='Phone number 6 or 10 digit'
+              value={form.values.cell}
               onChange={(event) => {
-                form.setFieldValue('email', event.currentTarget.value);
+                form.setFieldValue('cell', event.currentTarget.value);
               }}
-              error={form.errors.phone}
+              error={form.errors.cell}
             />
 
-            {type === 'register' && (
-              <Checkbox
-                label='I accept the terms of service'
-                checked={form.values.terms}
-                onChange={(event) => {
-                  form.setFieldValue('terms', event.currentTarget.checked);
-                }}
-              />
-            )}
             {formError ? (
               <Group position='left' noWrap>
                 <Text color='red' size='sm' weight={500}>
@@ -104,42 +103,14 @@ const NewContactForm = (props) => {
             ) : null}
           </Group>
 
-          <Group position='apart' mt='xl'>
-            <Anchor
-              component='button'
-              type='button'
-              color='gray'
-              onClick={() => toggle()}
-              size='sm'
-              style={{ textDecoration: 'none' }}
-            >
-              {type === 'register' ? (
-                <Group noWrap>
-                  <Text size='sm' style={{ marginRight: -10 }}>
-                    Already have an account?
-                  </Text>
-                  <Text size='sm' color='indigo' weight='bold'>
-                    Log in.
-                  </Text>
-                </Group>
-              ) : (
-                <Group position='left' noWrap>
-                  <Text size='sm' style={{ marginRight: -10 }}>
-                    {`Don't have an account?`}
-                  </Text>
-                  <Text size='sm' color='indigo' weight='bold'>
-                    Register.
-                  </Text>
-                </Group>
-              )}
-            </Anchor>
+          <Group position='center' mt='xl'>
             <Button
               type='submit'
-              disabled={!form.values.terms}
+              disabled={!form.errors}
               loading={isLoading}
-              leftIcon={<EnterIcon />}
+              leftIcon={<CheckboxIcon />}
             >
-              {type === 'register' ? 'Register' : 'Log in'}
+              Add contact
             </Button>
           </Group>
         </form>

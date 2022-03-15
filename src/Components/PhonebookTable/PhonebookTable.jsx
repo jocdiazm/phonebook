@@ -1,54 +1,14 @@
 /* eslint-disable react/prop-types */
-import { ActionIcon, Button, Modal, Table, Text } from '@mantine/core';
+import { ActionIcon, Button, Table, Text } from '@mantine/core';
 import uniqid from 'uniqid';
 import {
   StarFillIcon,
   StarIcon,
   XCircleFillIcon,
 } from '@primer/octicons-react';
-import { useState } from 'react';
-import ContactForm from '../ContactForm';
 
-const myContacts = [
-  {
-    name: 'Jose Díaz',
-    phone: '3001231234',
-    email: 'josek1031@gmail.com',
-    favorite: false,
-  },
-  {
-    name: 'Jose Carlos Díaz',
-    phone: '12345345354',
-    email: 'josekdiaz@gmail.com',
-    favorite: true,
-  },
-  {
-    name: 'Jose Díaz 3',
-    phone: '30012234324234',
-    email: 'josek1031+01@gmail.com',
-    favorite: false,
-  },
-  {
-    name: 'Jose Díaz',
-    phone: '3001231234',
-    email: 'josek1031@gmail.com',
-    favorite: false,
-  },
-  {
-    name: 'Jose Carlos Díaz',
-    phone: '12345345354',
-    email: 'josekdiaz@gmail.com',
-    favorite: true,
-  },
-  {
-    name: 'Jose Díaz 3',
-    phone: '30012234324234',
-    email: 'josek1031+01@gmail.com',
-    favorite: false,
-  },
-];
 const ContactsTable = (props) => {
-  const { contacts, setcontacts: setContacts } = props;
+  const { contacts, setcontacts: setContacts, favorite } = props;
   const handleDeleteItem = (index) => {
     setContacts((state) => {
       const newState = [...state];
@@ -76,43 +36,45 @@ const ContactsTable = (props) => {
       return newState;
     });
   };
-  const rows = contacts.map((contact, index) => (
-    <tr key={`${contact?.id}${uniqid('-item')}`}>
-      <td>
-        <ActionIcon
-          color={contact.favorite ? 'yellow' : 'gray'}
-          variant='transparent'
-          title='Add to favorites'
-          onClick={() => handleStarContact(index)}
-        >
-          {contact.favorite ? (
-            <StarFillIcon size={18} />
-          ) : (
-            <StarIcon size={18} />
-          )}
-        </ActionIcon>
-      </td>
-      <td>{index + 1}</td>
-      <td>{contact?.name}</td>
-      <td>{contact?.phone}</td>
-      <td>{contact?.email}</td>
-      <td>
-        <Button color='blue' compact onClick={handleEditContact}>
-          Edit
-        </Button>
-      </td>
-      <td>
-        <ActionIcon
-          color='red'
-          variant='transparent'
-          title='Remove item'
-          onClick={() => handleDeleteItem(index)}
-        >
-          <XCircleFillIcon />
-        </ActionIcon>
-      </td>
-    </tr>
-  ));
+  const rows = contacts
+    .filter((contact) => (favorite ? contact.favorite : contact))
+    .map((contact, index) => (
+      <tr key={`${contact?.id}${uniqid('-item')}`}>
+        <td>
+          <ActionIcon
+            color={contact.favorite ? 'yellow' : 'gray'}
+            variant='transparent'
+            title='Add to favorites'
+            onClick={() => handleStarContact(index)}
+          >
+            {contact.favorite ? (
+              <StarFillIcon size={18} />
+            ) : (
+              <StarIcon size={18} />
+            )}
+          </ActionIcon>
+        </td>
+        <td>{index + 1}</td>
+        <td>{contact?.name}</td>
+        <td>{contact?.phone}</td>
+        <td>{contact?.email}</td>
+        <td>
+          <Button color='blue' compact onClick={handleEditContact}>
+            Edit
+          </Button>
+        </td>
+        <td>
+          <ActionIcon
+            color='red'
+            variant='transparent'
+            title='Remove item'
+            onClick={() => handleDeleteItem(index)}
+          >
+            <XCircleFillIcon />
+          </ActionIcon>
+        </td>
+      </tr>
+    ));
   return (
     // <ScrollArea style={{ height: 300 }}>
     <Table verticalSpacing='sm' horizontalSpacing='xs' highlightOnHover>
@@ -133,27 +95,20 @@ const ContactsTable = (props) => {
   );
 };
 
-const PhonebookTable = () => {
-  const [contacts, setContacts] = useState(myContacts);
-  const [modalOpened, setModalOpened] = useState(false);
-  return contacts?.length ? (
-    <>
-      <ContactsTable contacts={contacts} setcontacts={setContacts} />
-      <Modal
-        opened={modalOpened}
-        onClose={() => setModalOpened(false)}
-        title='Edit Contact'
-        styles={{
-          header: { fontWeight: 600 },
-        }}
-        transition='fade'
-        transitionDuration={300}
-        transitionTimingFunction='ease'
-        centered
-      >
-        <ContactForm setmodalopen={setModalOpened} />
-      </Modal>
-    </>
+const PhonebookTable = (props) => {
+  const { seteditcontact, contacts, setContacts, favorite } = props;
+
+  const checkContacts = contacts.filter((contact) => {
+    return favorite ? contact.favorite : contact;
+  });
+
+  return checkContacts?.length ? (
+    <ContactsTable
+      contacts={contacts}
+      setcontacts={setContacts}
+      seteditcontact={seteditcontact}
+      favorite={favorite}
+    />
   ) : (
     <Text>There are no contacts to show</Text>
   );
