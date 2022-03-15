@@ -1,7 +1,3 @@
-/* eslint-disable no-confusing-arrow */
-/* eslint-disable implicit-arrow-linebreak */
-/* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable react/prop-types */
 import {
   Button,
   CheckboxIcon,
@@ -19,6 +15,7 @@ import {
   PersonIcon,
 } from '@primer/octicons-react';
 import { useEffect, useState } from 'react';
+import propTypes from 'prop-types';
 import {
   addContactToLocalStorage,
   editContactLocalStorage,
@@ -63,7 +60,7 @@ const NewContactForm = (props) => {
   };
 
   return (
-    <Paper radius='md' padding='xs' {...props}>
+    <Paper radius='md' padding='xs'>
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Group direction='column' grow>
           <TextInput
@@ -132,6 +129,25 @@ const NewContactForm = (props) => {
       </form>
     </Paper>
   );
+};
+
+NewContactForm.propTypes = {
+  formtype: propTypes.string,
+  setmodalopen: propTypes.func.isRequired,
+  editcontact: propTypes.shape({
+    name: propTypes.string,
+    email: propTypes.string,
+    phone: propTypes.string,
+  }),
+};
+
+NewContactForm.defaultProps = {
+  formtype: 'new',
+  editcontact: {
+    name: '',
+    email: '',
+    phone: '',
+  },
 };
 
 export default NewContactForm;

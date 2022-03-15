@@ -1,7 +1,7 @@
-/* eslint-disable react/prop-types */
 import { ActionIcon, Button, Modal, Table, Text } from '@mantine/core';
 import { useState } from 'react';
 import uniqid from 'uniqid';
+import propTypes from 'prop-types';
 import {
   StarFillIcon,
   StarIcon,
@@ -133,6 +133,24 @@ const PhonebookTable = (props) => {
   ) : (
     <Text>There are no contacts to show</Text>
   );
+};
+
+PhonebookTable.propTypes = {
+  favorite: propTypes.bool,
+};
+
+PhonebookTable.defaultProps = {
+  favorite: false,
+};
+
+ContactsTable.propTypes = {
+  favorite: propTypes.bool,
+  seteditcontact: propTypes.func.isRequired,
+  seteditcontactopen: propTypes.func.isRequired,
+};
+
+ContactsTable.defaultProps = {
+  favorite: false,
 };
 
 export default PhonebookTable;
