@@ -8,6 +8,7 @@ React web app with:
 - Remove contact
 - Uses the localstorage
 - A "Seeding functionality"
+- Error validation within forms
 
 ## Demo
 
