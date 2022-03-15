@@ -35,6 +35,7 @@ const NewContactForm = (props) => {
       email: editcontact?.email ?? '',
       name: editcontact?.name ?? '',
       phone: editcontact?.phone ?? '',
+      favorite: editcontact?.favorite ?? false,
     },
 
     validationRules: {
@@ -138,6 +139,7 @@ NewContactForm.propTypes = {
     name: propTypes.string,
     email: propTypes.string,
     phone: propTypes.string,
+    favorite: propTypes.bool,
   }),
 };
 
@@ -147,6 +149,7 @@ NewContactForm.defaultProps = {
     name: '',
     email: '',
     phone: '',
+    favorite: false,
   },
 };
 
