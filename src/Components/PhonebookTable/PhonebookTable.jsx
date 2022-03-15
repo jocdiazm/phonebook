@@ -126,6 +126,7 @@ const PhonebookTable = (props) => {
         <NewContactForm
           setmodalopen={setEditContactOpened}
           editcontact={editContact}
+          formtype='edit'
         />
       </Modal>
     </>

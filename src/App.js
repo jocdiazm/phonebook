@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Button, Modal, Tabs, Title } from '@mantine/core';
+import { Button, Group, Modal, Tabs, Title } from '@mantine/core';
 import {
   PersonAddIcon,
   PersonFillIcon,
@@ -14,40 +14,40 @@ import { useAppDispatch, useAppState } from './Context/store';
 
 const myContacts = [
   {
-    name: 'Jose Díaz',
+    name: 'Carlos Muñoz',
     phone: '3001231235',
     email: 'josek1031@gmail.com',
     favorite: false,
   },
   {
-    name: 'Jose Carlos Díaz',
+    name: 'Jose Díaz',
     phone: '12345345358',
     email: 'josekdiaz@gmail.com',
-    favorite: true,
+    favorite: false,
   },
   {
-    name: 'Jose Díaz 3',
+    name: 'Juan Diaz',
     phone: '30012234324239',
-    email: 'josek1031+01@gmail.com',
-    favorite: false,
-  },
-  {
-    name: 'Jose Díaz 4',
-    phone: '3001231234',
-    email: 'josek1031@gmail.com',
-    favorite: false,
-  },
-  {
-    name: 'Jose Carlos Díaz 6',
-    phone: '12345345354',
-    email: 'josekdiaz@gmail.com',
+    email: 'juandiaz@gmail.com',
     favorite: true,
   },
   {
-    name: 'Jose Díaz 7',
-    phone: '30012234324234',
-    email: 'josek1031+01@gmail.com',
+    name: 'Emmanuele',
+    phone: '3001231234',
+    email: 'emmanuele@gmail.com',
     favorite: false,
+  },
+  {
+    name: 'Maria Muñoz',
+    phone: '12345345354',
+    email: 'mariamunoz@gmail.com',
+    favorite: true,
+  },
+  {
+    name: 'Davis',
+    phone: '30012234324234',
+    email: 'davis@gmail.com',
+    favorite: true,
   },
 ];
 
@@ -57,9 +57,17 @@ const App = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    localStorage.setItem('contacts', JSON.stringify(myContacts));
     getContactsFromLocalStorage(dispatch);
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem('contacts', JSON.stringify(contacts));
+  }, [contacts]);
+
+  const handleImportContacts = () => {
+    localStorage.setItem('contacts', JSON.stringify(myContacts));
+    getContactsFromLocalStorage(dispatch);
+  };
 
   return (
     <div className='App'>
@@ -74,15 +82,26 @@ const App = () => {
           }}
         >
           <Title order={1}> Contact List</Title>
+        </div>
+
+        <Group position='apart' style={{ margin: 30 }}>
+          <Button
+            color='violet'
+            leftIcon={<PersonAddIcon size={14} />}
+            onClick={handleImportContacts}
+            compact
+          >
+            Import contacts
+          </Button>
           <Button
             color='teal'
             leftIcon={<PersonAddIcon size={14} />}
             compact
             onClick={() => setNewContactOpened(true)}
           >
-            Add contact
+            Add new contact
           </Button>
-        </div>
+        </Group>
 
         <Modal
           opened={newContactOpened}

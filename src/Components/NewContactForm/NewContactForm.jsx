@@ -1,6 +1,7 @@
+/* eslint-disable no-confusing-arrow */
+/* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
 import {
   Button,
   CheckboxIcon,
@@ -10,22 +11,24 @@ import {
   TextInput,
   ThemeIcon,
 } from '@mantine/core';
-import { useForm, useToggle } from '@mantine/hooks';
+import { useForm } from '@mantine/hooks';
 import {
   AlertFillIcon,
-  CheckIcon,
   DeviceMobileIcon,
+  MailIcon,
+  PersonIcon,
 } from '@primer/octicons-react';
 import { useEffect, useState } from 'react';
-import { addContactToLocalStorage } from '../../Context/actions';
+import {
+  addContactToLocalStorage,
+  editContactLocalStorage,
+} from '../../Context/actions';
 import { useAppDispatch } from '../../Context/store';
 
 const NewContactForm = (props) => {
   const { formtype, setmodalopen: setModalOpen, editcontact } = props;
-  console.log(
-    '🚀 ~ file: NewContactForm.jsx ~ line 25 ~ NewContactForm ~ editcontact',
-    editcontact,
-  );
+
+  const typeContactForm = formtype === 'edit' ? 'edit' : 'new';
   const [isLoading, setLoading] = useState(false);
   const [formError, setFormError] = useState(null);
   const dispatch = useAppDispatch();
@@ -38,9 +41,9 @@ const NewContactForm = (props) => {
     },
 
     validationRules: {
-      email: (val) => /^\S+@\S+$/.test(val),
-      name: (val) => val.length >= 3,
-      phone: (val) => val.length >= 6,
+      email: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+      name: (value) => value.length >= 3,
+      phone: (value) => value.length >= 6 && /^\d+$/.test(value),
     },
   });
 
@@ -49,7 +52,14 @@ const NewContactForm = (props) => {
   }, []);
 
   const handleSubmit = (contact) => {
-    addContactToLocalStorage(dispatch, contact);
+    setLoading(true);
+    if (typeContactForm === 'edit') {
+      editContactLocalStorage(dispatch, contact);
+    } else {
+      addContactToLocalStorage(dispatch, contact);
+    }
+    setLoading(false);
+    setModalOpen(false);
   };
 
   return (
@@ -59,22 +69,25 @@ const NewContactForm = (props) => {
           <TextInput
             required
             label='Name'
-            placeholder='New contact fullname'
+            icon={<PersonIcon />}
+            placeholder='Your Fullname'
             value={form.values.name}
             onChange={(event) => {
               form.setFieldValue('name', event.currentTarget.value);
             }}
+            error={form.errors.name && 'Must have at least 3 characters'}
           />
 
           <TextInput
             required
             label='Email'
+            icon={<MailIcon />}
             placeholder='contact@example.com'
             value={form.values.email}
             onChange={(event) => {
               form.setFieldValue('email', event.currentTarget.value);
             }}
-            error={form.errors.email}
+            error={form.errors.email && 'Invalid email'}
           />
           <TextInput
             required
@@ -85,7 +98,7 @@ const NewContactForm = (props) => {
             onChange={(event) => {
               form.setFieldValue('phone', event.currentTarget.value);
             }}
-            error={form.errors.phone}
+            error={form.errors.phone && 'Phone must have 6+ and only numbers'}
           />
 
           {formError ? (
@@ -108,11 +121,12 @@ const NewContactForm = (props) => {
         <Group position='center' mt='xl'>
           <Button
             type='submit'
+            color={formtype === 'edit' ? 'blue' : 'teal'}
             disabled={!form.errors}
             loading={isLoading}
             leftIcon={<CheckboxIcon />}
           >
-            Add contact
+            {formtype === 'edit' ? 'Update contact' : 'Add contact'}
           </Button>
         </Group>
       </form>
